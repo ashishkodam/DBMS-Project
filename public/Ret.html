@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="topnav">
+  <a class="active" href="#home">DataBase Project</a>
+   <span class = " left">
+  <a href="index.html">Insert</a>
+  <a href="Delete.html">Delete</a>
+  <a href="Max.html">Max</a>
+  <a href="Ret.html">Retrieve</a>
+</span>
+ </div>
+ <br>
+ <div class="container">
+  <h1> Retrieve Data</h1>
+    <div class="row">
+      <div class="col-md-10">
+        <label for="validationTooltip03">Select Table</label>
+        <select class="custom-select custom-select-md mb-3" id="selecttable">
+          <option selected>Select the table</option>
+          <option value="players">Players</option>
+                <option value="play">Play</option>
+                <option value="teams">Teams</option>
+                <option value="games">Games</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="validationTooltip04">Submit</label>
+      <br>
+      <button class="btn btn-primary" type="button" onclick="getDataFunction()">Submit</button>
+      </div>
+    </div>
+    <br>
+    <div id="showplaytable"></div>
+ </div>
+
+
+ <script>
+   function getDataFunction() {
+    var queary = document.querySelector('#selecttable');
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:3000/db/retrive');
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const response = JSON.parse(xhr.responseText);
+         if(response.length == 0){
+           alert("Empty Table")
+         }
+          var col = [];
+      response.map(i => {
+        for (var key in i) {
+          if (col.indexOf(key) === -1) {
+            col.push(key);
+          }
+        }
+      })
+      var table = document.createElement("table");
+      var tr = table.insertRow(-1);
+
+      col.map(c => {
+        var th = document.createElement("th");
+        th.innerHTML = c;
+        tr.appendChild(th);
+      })
+      for (var i = 0; i < response.length; i++) {
+
+        tr = table.insertRow(-1);
+
+        for (var j = 0; j < col.length; j++) {
+          var tabCell = tr.insertCell(-1);
+          tabCell.innerHTML = response[i][col[j]];
+        }
+      }
+      var divContainer = document.getElementById("showplaytable");
+      divContainer.innerHTML = "";
+      divContainer.appendChild(table);
+    
+        }
+      };
+      const json = {
+        
+        "table": queary.value
+      };
+      
+      xhr.send(JSON.stringify(json));
+    
+     
+   }
+ </script>
+</body>
+</html>

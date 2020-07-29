@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+
+  <div class="topnav">
+    <a class="active" href="#home">DataBase Project</a>
+    <span class=" left">
+      <a href="index.html">Insert</a>
+      <a href="Delete.html">Delete</a>
+      <a href="Max.html">Max</a>
+      <a href="Ret.html">Retrieve</a>
+    </span>
+  </div>
+  <br>
+  <div>
+    <div class="container">
+      <h1> 1.Single Insertion</h1>
+      <form>
+        <div class="form-row">
+          <div class="col-md-6 mb-3">
+            <label for="validationTooltip03">Select Table</label>
+            <select class="custom-select custom-select-md mb-3" id="playerSingle">
+              <option selected>Select the table</option>
+              <option value="players">Players</option>
+              <option value="play">Play</option>
+              <option value="teams">Teams</option>
+              <option value="games">Games</option>
+            </select>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="validationTooltip04">Select File</label>
+            <input type="file" class="form-control-file" id="singleFile">
+
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="validationTooltip04">Select File</label>
+            <br>
+            <button class="btn btn-primary" type="button" onclick="singleFunction()">Submit</button>
+          </div>
+        </div>
+      </form>
+      <div>
+        <br>
+        <h1> 2. Multiple Insertion</h1>
+        <form>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationTooltip03">Select Table</label>
+              <select class="custom-select custom-select-md mb-3" id="playermultiple">
+                <option selected>Select the table</option>
+                <option value="players">Players</option>
+                <option value="play">Play</option>
+                <option value="teams">Teams</option>
+                <option value="games">Games</option>
+              </select>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="validationTooltip04">Select File</label>
+              <input type="file" class="form-control-file" id="multipleFile">
+  
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="validationTooltip04">Select File</label>
+              <br>
+              <button class="btn btn-primary" type="button" onclick="multipleFunction()">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <br>
+        <h1> 3. Load Data Insertion</h1>
+        <form>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationTooltip03">Select Table</label>
+              <select class="custom-select custom-select-md mb-3" id="playerload">
+                <option selected>Select the table</option>
+                <option value="players">Players</option>
+                <option value="play">Play</option>
+                <option value="teams">Teams</option>
+                <option value="games">Games</option>
+              </select>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="validationTooltip04"></label>
+              <input type="text" class="form-control-file" placeholder="Enter the path along with file namw" id="loadtext">
+  
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="validationTooltip04">Select File</label>
+              <br>
+              <button class="btn btn-primary" type="button" onclick="loadFunction()">Submit</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+
+    <script>
+      function singleFunction() {
+        var table = document.getElementById("playerSingle").value;
+        var file = document.getElementById("singleFile").files;
+        var formData = new FormData();
+        formData.append("table", table);
+        formData.append("insetType", 'single');
+        formData.append('file', file[0])
+        var xml = new XMLHttpRequest();
+
+        xml.onload = () => {
+          var data = JSON.parse(xml.responseText)
+          if (xml.readyState == 4 && xml.status == "201") {
+            console.log(data);
+          } else {
+            console.log(data)
+            let retunResponce = `Data inserted successfully in ${data.message} ${'m.sec'}`;
+            alert(retunResponce);
+          }
+        };
+        xml.open("POST", "http://localhost:3000/db/insert");
+        xml.send(formData);
+        // }
+      }
+
+      function multipleFunction() {
+        var table = document.getElementById("playermultiple").value;
+        var file = document.getElementById("multipleFile").files;
+        var formData = new FormData();
+        formData.append("table", table);
+        formData.append("insetType", 'multiple');
+        formData.append('file', file[0])
+        var xml = new XMLHttpRequest();
+
+        xml.onload = () => {
+          var data = JSON.parse(xml.responseText)
+          if (xml.readyState == 4 && xml.status == "201") {
+            console.log(data);
+          } else {
+            let retunResponce = `Data inserted successfully in ${data.message} ${'m.sec'}`;
+            alert(retunResponce);
+          }
+        };
+        xml.open("POST", "http://localhost:3000/db/insert");
+        xml.send(formData);
+        // }
+      }
+    
+      function loadFunction() {
+        var table = document.getElementById("playerload").value;
+        var file = document.getElementById("loadtext").value;
+        var formData = new FormData();
+        formData.append("table", table);
+        formData.append("insetType", 'load');
+        formData.append('file', file)
+        var xml = new XMLHttpRequest();
+
+        xml.onload = () => {
+          var data = JSON.parse(xml.responseText)
+          if (xml.readyState == 4 && xml.status == "201") {
+            console.log(data);
+          } else {
+            let retunResponce = `Data inserted successfully in ${data.message} ${'m.sec'}`;
+            alert(retunResponce);
+          }
+        };
+        xml.open("POST", "http://localhost:3000/db/insert-load");
+        xml.send(formData);
+        // }
+      }
+    
+    </script>
+
+
+
+
+</body>
+
+</html>

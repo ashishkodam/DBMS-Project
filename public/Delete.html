@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+</head>
+<body>
+
+<div class="topnav">
+  <a class="active" href="#home">DataBase Project</a>
+   <span class = " left">
+  <a href="index.html">Insert</a>
+  <a href="Delete.html">Delete</a>
+  <a href="Max.html">Maximum</a>
+  <a href="Ret.html">Retrieve</a>
+</span>
+ </div>
+ <br>
+ <div >
+   <div class="container">
+    <h1> Delete</h1>
+    <form>
+      <div class="form-row">
+        <div class="col-md-10 mb-3">
+          <label for="validationTooltip03">Select Table</label>
+          <select class="custom-select custom-select-md mb-3" id="deleteTable">
+            <option selected>Select the table</option>
+            <option value="players">Players</option>
+                <option value="play">Play</option>
+                <option value="teams">Teams</option>
+                <option value="games">Games</option>
+          </select>
+        </div>
+        
+        <div class="col-md-2 mb-3">
+          <label for="validationTooltip04">Submit</label>
+          <br>
+          <button class="btn btn-primary" type="button" onclick="deleteTableFunction()">Submit</button>
+        </div>
+      </div>
+    </form>
+   </div>
+  
+ </div>
+ <script>
+   function deleteTableFunction() {
+    let tableNumber
+     switch (document.getElementById("deleteTable").value) {
+     case 'players':
+       tableNumber = 1
+       break;
+     case 'play':
+       tableNumber = 2
+       break;
+     case 'games':
+       tableNumber = 3
+       break;
+     case 'teams':
+       tableNumber = 4
+       break;
+
+   }
+
+   var r = confirm("Are You Sure!");
+   if (r == true) {
+     var request = new XMLHttpRequest();
+     request.onload = () => {
+       var data = JSON.parse(request.responseText)
+       if (request.readyState == 4 && request.status == "201") {
+         console.log(data);
+       } else {
+         let retunResponce = `Deleted successfully`;
+         alert(retunResponce);
+       }
+     };
+     let url = `${'http://localhost:3000/db/delete'}/${tableNumber}`
+     request.open("DELETE", url);
+     
+     request.send('');
+   } else {
+     txt = "You pressed Cancel!";
+   }
+   }
+ </script>
+</body>
+</html>
